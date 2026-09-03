@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+done.txt
+.idea/
+cookie.txt
+docker-data/
+docker-compose.yml
+.DS_Store
