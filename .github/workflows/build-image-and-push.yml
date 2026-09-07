@@ -7,7 +7,7 @@ on:
 
 env:
   ARCHITECTURES: '["amd64", "aarch64"]'
-  IMAGE_NAME: hass-app-ytdl
+  IMAGE_NAME: yt-search-download
 
 permissions:
   contents: read
@@ -53,6 +53,8 @@ jobs:
             latest
           push: 'true'
           version: ${{ github.event.release.tag_name }}
+          context: ./yt-search-download
+
 
   manifest:
     name: Publish multi-arch manifest

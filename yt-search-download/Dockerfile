@@ -5,7 +5,7 @@ RUN wget -q https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -O 
 RUN chmod a+x /usr/bin/yt-dlp
 
 WORKDIR /app
-COPY . .
+COPY .. .
 RUN npm install
 
 ENV YTDLP_COOKIES_FILE=/app/cookie.txt
