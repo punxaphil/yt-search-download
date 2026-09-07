@@ -16,8 +16,8 @@ export type RuntimeOptions = {
 const runtimeOptions = commandLineArgs(optionDefinitions, { partial: true }) as RuntimeOptions;
 
 export function getRuntimeOptions(): RuntimeOptions {
-  // if /data/config.json exists, load it as runtimeOptions. If runtimeOptions are provided via command line, throw exception if /data/config.json exists.
-  const configFilePath = '/data/config.json';
+  // if /data/options.json exists, load it as runtimeOptions. If runtimeOptions are provided via command line, throw exception if /data/options.json exists.
+  const configFilePath = '/data/options.json';
   let result;
   let stateDir;
   let saveDir;
@@ -29,6 +29,7 @@ export function getRuntimeOptions(): RuntimeOptions {
     stateDir = resolveExistingDir(configFileOptions.stateDir);
     saveDir = resolveExistingDir(configFileOptions.saveDir);
   } else {
+    console.log(`No config file found at ${configFilePath}. Using command line options if provided.`);
     result = runtimeOptions;
     stateDir = resolveExistingDir(runtimeOptions.stateDir);
     saveDir = resolveExistingDir(runtimeOptions.saveDir);
