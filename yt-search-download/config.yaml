@@ -8,7 +8,7 @@ arch:
   - aarch64
 url: https://github.com/punxaphil/yt-search-download/tree/main/yt-search-download
 ports:
-  - 3000
+  3000/tcp: 3000
 map:
   - media:rw
 options:
