@@ -1,6 +1,6 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-configuration
 name: YT Search & Download
-version: 1.0.2
+version: 1.0.3
 slug: yt-search-download
 description: A Home Assistant app for searching and downloading Youtube videos
 arch:
@@ -13,7 +13,9 @@ map:
   - media:rw
 options:
   saveDir: /media/yt-search-download
+  stateDir: /data
 schema:
-  saveDir: "str?"
+  saveDir: "str"
+  stateDir: "str"
 image: ghcr.io/punxaphil/yt-search-download
 init: false
