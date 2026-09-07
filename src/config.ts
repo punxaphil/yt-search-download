@@ -8,39 +8,43 @@ export const optionDefinitions = [
 ];
 
 export type RuntimeOptions = {
-  saveDir?: string;
-  stateDir?: string;
-  cookiesFile?: string;
+  saveDir: string;
+  stateDir: string;
+  cookiesFile: string;
 };
 
 const runtimeOptions = commandLineArgs(optionDefinitions, { partial: true }) as RuntimeOptions;
 
-export function getRuntimeOptions(): RuntimeOptions & { stateDir: string; saveDir: string } {
-  const resolvedStateDir =
-    resolveExistingDir([runtimeOptions.stateDir, process.env.STATE_DIR, '/state', 'state']) ||
-    runtimeOptions.stateDir ||
-    process.env.STATE_DIR ||
-    '/state';
-
-  const resolvedSaveDir =
-    resolveExistingDir([runtimeOptions.saveDir, process.env.SAVE_DIR, '/saveDir', 'saveDir']) ||
-    runtimeOptions.saveDir ||
-    process.env.SAVE_DIR ||
-    '/saveDir';
-
-  return {
-    ...runtimeOptions,
-    stateDir: resolvedStateDir,
-    saveDir: resolvedSaveDir,
-  };
-}
-
-export function resolveExistingDir(candidates: Array<string | undefined>) {
-  for (const candidate of candidates) {
-    if (!candidate) continue;
-    if (fs.existsSync(candidate)) return candidate;
+export function getRuntimeOptions(): RuntimeOptions {
+  // if /data/config.json exists, load it as runtimeOptions. If runtimeOptions are provided via command line, throw exception if /data/config.json exists.
+  const configFilePath = '/data/config.json';
+  let result;
+  let stateDir;
+  let saveDir;
+  if (fs.existsSync(configFilePath)) {
+    console.log(`Loading runtime options from ${configFilePath}. Ignoring command line options if provided.`);
+    const configFileContent = fs.readFileSync(configFilePath, 'utf-8');
+    const configFileOptions = JSON.parse(configFileContent) as RuntimeOptions;
+    result = configFileOptions;
+    stateDir = resolveExistingDir(configFileOptions.stateDir);
+    saveDir = resolveExistingDir(configFileOptions.saveDir);
+  } else {
+    result = runtimeOptions;
+    stateDir = resolveExistingDir(runtimeOptions.stateDir);
+    saveDir = resolveExistingDir(runtimeOptions.saveDir);
   }
-  return undefined;
+  if (!stateDir || !saveDir) {
+    if (!result.stateDir) {
+      throw new Error('Missing or invalid stateDir');
+    }
+    if (!result.saveDir) {
+      throw new Error('Missing or invalid saveDir');
+    }
+  }
+  return result;
 }
 
-export const BUILD_STAMP = '2026-05-25-video-identify-fallbacks-v7';
+export function resolveExistingDir(candidate: string | undefined) {
+  if (candidate && fs.existsSync(candidate)) return candidate;
+  return null;
+}

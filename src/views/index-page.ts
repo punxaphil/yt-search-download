@@ -1,12 +1,11 @@
 import fs from 'fs';
-import { BUILD_STAMP, RuntimeOptions } from '../config';
+import { RuntimeOptions } from '../config';
 
 export function renderIndexPage(
   options: RuntimeOptions & { stateDir: string; saveDir: string },
   initialRecentVideos: string[],
 ) {
   const debugSummary = {
-    buildStamp: BUILD_STAMP,
     resolvedStateDir: options.stateDir || '',
     resolvedSaveDir: options.saveDir || '',
     stateDirExists: !!options.stateDir && fs.existsSync(options.stateDir),
@@ -60,7 +59,6 @@ export function renderIndexPage(
           </form>
           <div id="status" class="status" aria-live="polite"></div>
           <div class="debug-summary">Debug (server-rendered)
-buildStamp: ${escapeHtml(String(debugSummary.buildStamp))}
 resolvedStateDir: ${escapeHtml(String(debugSummary.resolvedStateDir))}
 resolvedSaveDir: ${escapeHtml(String(debugSummary.resolvedSaveDir))}
 stateDirExists: ${String(debugSummary.stateDirExists)}

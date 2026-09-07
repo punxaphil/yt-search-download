@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { randomUUID } from 'crypto';
-import { getRuntimeOptions, BUILD_STAMP } from './config';
+import { getRuntimeOptions } from './config';
 import { ensureStateFiles, getRecentSingleVideos } from './utils/state';
 import {
   listAllFilesRecursively,
@@ -161,7 +161,6 @@ router.get('/debug/runtime', (_req, res) => {
     }
 
     res.status(200).json({
-      buildStamp: BUILD_STAMP,
       argv: process.argv,
       runtimeOptionsResolved: options,
       state: {

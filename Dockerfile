@@ -8,8 +8,6 @@ WORKDIR /app
 COPY . .
 RUN npm install
 
-# cookie.txt is NOT baked in — it is bind-mounted via docker-compose.
-# YTDLP_COOKIES_FILE can still be overridden by the compose env block.
 ENV YTDLP_COOKIES_FILE=/app/cookie.txt
 
-CMD npm run start -- --stateDir /state/ --saveDir /saveDir
+CMD npm run start
