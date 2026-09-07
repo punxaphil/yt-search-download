@@ -1,14 +1,14 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-configuration
 name: YT Search & Download
-version: 1.0.1
+version: 1.0.2
 slug: yt-search-download
 description: A Home Assistant app for searching and downloading Youtube videos
 arch:
   - amd64
   - aarch64
 url: https://github.com/punxaphil/yt-search-download
-ports:
-  3000/tcp: 3000
+ingress: true
+ingress_port: 3000
 map:
   - media:rw
 options:
