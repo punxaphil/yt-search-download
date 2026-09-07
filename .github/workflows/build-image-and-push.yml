@@ -13,7 +13,33 @@ permissions:
   contents: read
 
 jobs:
+  # check version in config.yaml, if no docker image has been published with that version,
+  # proceed with build and push using version in config.yaml
+  check-version:
+    name: Check version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.check-version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check version in config.yaml
+        id: check-version
+        run: |
+          VERSION=$(yq e '.version' yt-search-download/config.yaml)
+          echo "Version in config.yaml: $VERSION"
+
+          # Check if the image with the specified version exists in GitHub Container Registry
+          IMAGE_EXISTS=$(gh api -H "Accept: application/vnd.github.v3+json" /user/packages/container/$IMAGE_NAME/versions | jq -r --arg VERSION "$VERSION" '.[] | select(.metadata.container.tags[] == $VERSION) | .id')
+
+          if [ -z "$IMAGE_EXISTS" ]; then
+            echo "Image with version $VERSION does not exist. Proceeding with build and push."
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+          else
+            echo "Image with version $VERSION already exists. Skipping build and push."
+          fi
   init:
+    if: ${{ needs.check-version.outputs.version != '' }}
     name: Initialize build
     runs-on: ubuntu-latest
     outputs:
@@ -29,6 +55,7 @@ jobs:
           image-name: ${{ env.IMAGE_NAME }}
 
   build:
+    if: ${{ needs.check-version.outputs.version != '' }}
     name: Build ${{ matrix.arch }} image
     needs: init
     runs-on: ${{ matrix.os }}
@@ -49,14 +76,15 @@ jobs:
           container-registry-password: ${{ secrets.GITHUB_TOKEN }}
           image: ${{ matrix.image }}
           image-tags: |
-            ${{ github.event.release.tag_name }}
+            ${{ needs.check-version.outputs.version }}
             latest
           push: 'true'
-          version: ${{ github.event.release.tag_name }}
+          version: ${{ needs.check-version.outputs.version }}
           context: ./yt-search-download
 
 
   manifest:
+    if: ${{ needs.check-version.outputs.version != '' }}
     name: Publish multi-arch manifest
     needs: [init, build]
     runs-on: ubuntu-latest
@@ -71,5 +99,5 @@ jobs:
           container-registry-password: ${{ secrets.GITHUB_TOKEN }}
           image-name: ${{ env.IMAGE_NAME }}
           image-tags: |
-            ${{ github.event.release.tag_name }}
+            ${{ needs.check-version.outputs.version }}
             latest
