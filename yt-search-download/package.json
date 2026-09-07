@@ -1,5 +1,5 @@
 {
-  "name": "hass-app-ytdl",
+  "name": "yt-search-download",
   "version": "1.0.0",
   "description": "",
   "main": "src/server.ts",

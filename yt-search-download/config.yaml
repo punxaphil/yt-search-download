@@ -6,7 +6,7 @@ description: A Home Assistant app for searching and downloading Youtube videos
 arch:
   - amd64
   - aarch64
-url: https://github.com/punxaphil/hass-app-ytdl
+url: https://github.com/punxaphil/yt-search-download
 ports:
   - 3000
 map:
@@ -16,4 +16,4 @@ options:
   kodipassword: null
   kodihost: null
   saveDir: /media/yt-search-download
-image: ghcr.io/punxaphil/hass-app-ytdl
+image: ghcr.io/punxaphil/yt-search-download
