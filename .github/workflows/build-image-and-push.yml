@@ -40,6 +40,7 @@ jobs:
           fi
   init:
     if: ${{ needs.check-version.outputs.version != '' }}
+    needs: check-version
     name: Initialize build
     runs-on: ubuntu-latest
     outputs:
@@ -57,7 +58,7 @@ jobs:
   build:
     if: ${{ needs.check-version.outputs.version != '' }}
     name: Build ${{ matrix.arch }} image
-    needs: init
+    needs: [init, check-version]
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read # To check out the code
@@ -86,7 +87,7 @@ jobs:
   manifest:
     if: ${{ needs.check-version.outputs.version != '' }}
     name: Publish multi-arch manifest
-    needs: [init, build]
+    needs: [init, build, check-version]
     runs-on: ubuntu-latest
     permissions:
       id-token: write # Write needed for Cosign signing (issue OIDC token for signing)
