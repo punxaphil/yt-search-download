@@ -1,6 +1,6 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-configuration
 name: YT Search & Download
-version: 1.0.8
+version: 1.0.9
 slug: yt-search-download
 description: A Home Assistant app for searching and downloading Youtube videos
 arch:
