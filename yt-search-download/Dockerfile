@@ -5,7 +5,8 @@ RUN apk add --no-cache \
     ffmpeg \
     curl \
     nodejs \
-    npm
+    npm \
+    python3
 
 RUN wget -q \
     https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp \
