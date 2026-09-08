@@ -68,10 +68,10 @@ Inspect full JSON: <a id="debug-runtime-link" href="#" target="_blank" rel="nore
           <div id="debug-box" class="debug-box" aria-live="polite"></div>
         </main>
         <script>
-          const appBasePath = window.location.pathname === '/' ? '' : window.location.pathname;
-          document.getElementById('debug-runtime-link').href = appBasePath + '/debug/runtime';
+          window.appBasePath = window.location.pathname === '/' ? '' : window.location.pathname;
+          document.getElementById('debug-runtime-link').href = window.appBasePath + '/debug/runtime';
           const script = document.createElement('script');
-          script.src = appBasePath + '/index-page.js';
+          script.src = window.appBasePath + '/index-page.js';
           document.head.appendChild(script);
         </script>
       </body>

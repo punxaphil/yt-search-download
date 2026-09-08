@@ -22,8 +22,6 @@ let lastIdentifiedYoutubeId = '';
 let lastClipboardCandidate = '';
 let clipboardCheckInFlight = false;
 
-const basePath = window.location.pathname === '/' ? '' : window.location.pathname;
-
 const initialRecentVideos = readInitialRecentVideos();
 
 recentVideosSelect.addEventListener('change', () => {
@@ -98,7 +96,9 @@ form.addEventListener('submit', async (event) => {
 
   let allowRedownload = false;
   try {
-    const precheckResponse = await fetch(basePath + '/check-downloaded?url=' + encodeURIComponent(urlInput.value));
+    const precheckResponse = await fetch(
+      window.appBasePath + '/check-downloaded?url=' + encodeURIComponent(urlInput.value),
+    );
     const precheckResult = await precheckResponse.json();
     if (precheckResponse.ok && precheckResult.alreadyDownloaded) {
       const matchingFiles = Array.isArray(precheckResult.matchingFiles) ? precheckResult.matchingFiles : [];
@@ -128,7 +128,7 @@ form.addEventListener('submit', async (event) => {
   let started = false;
 
   try {
-    const response = await fetch(basePath + '/download-video', {
+    const response = await fetch(window.appBasePath + '/download-video', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: payload.toString(),
@@ -159,7 +159,7 @@ form.addEventListener('submit', async (event) => {
 
 async function loadRecentVideos() {
   try {
-    const response = await fetch(basePath + '/recent-videos');
+    const response = await fetch(window.appBasePath + '/recent-videos');
     const result = await response.json();
     if (!response.ok) return;
     renderRecentVideos(Array.isArray(result.videos) ? result.videos : []);
@@ -170,11 +170,11 @@ async function loadRecentVideos() {
 
 async function loadDebugInfo() {
   try {
-    const runtimeResponse = await fetch(basePath + '/debug/runtime');
+    const runtimeResponse = await fetch(window.appBasePath + '/debug/runtime');
     const runtimeResult = await runtimeResponse.json();
-    const recentResponse = await fetch(basePath + '/recent-videos');
+    const recentResponse = await fetch(window.appBasePath + '/recent-videos');
     const recentResult = await recentResponse.json();
-    const searchProbeResponse = await fetch(basePath + '/search-files?q=' + encodeURIComponent('test'));
+    const searchProbeResponse = await fetch(window.appBasePath + '/search-files?q=' + encodeURIComponent('test'));
     const searchProbeResult = await searchProbeResponse.json();
     const lines = [
       '[debug/runtime] ' + runtimeResponse.status,
@@ -216,7 +216,7 @@ function renderRecentVideos(videos) {
 
 async function pollDownloadStatus(jobId) {
   while (true) {
-    const response = await fetch(basePath + '/download-status/' + encodeURIComponent(jobId));
+    const response = await fetch(window.appBasePath + '/download-status/' + encodeURIComponent(jobId));
     const job = await response.json();
     if (!response.ok) {
       status.className = 'status error show';
@@ -278,7 +278,7 @@ async function lookupVideoInfo() {
   const requestId = ++identifyRequestId;
   showVideoInfo('loading', 'Identifying video...');
   try {
-    const response = await fetch(basePath + '/video-info?url=' + encodeURIComponent(url));
+    const response = await fetch(window.appBasePath + '/video-info?url=' + encodeURIComponent(url));
     const result = await response.json();
     if (requestId !== identifyRequestId) return;
     if (!response.ok) {
@@ -337,7 +337,7 @@ async function runFileSearch(rawQuery) {
   }
   const requestId = ++searchRequestId;
   try {
-    const response = await fetch(basePath + '/search-files?q=' + encodeURIComponent(query));
+    const response = await fetch(window.appBasePath + '/search-files?q=' + encodeURIComponent(query));
     const result = await response.json();
     if (requestId !== searchRequestId) return;
     if (!response.ok) {
@@ -402,7 +402,7 @@ async function runYouTubeSearch(query) {
   searchVideoInput.disabled = true;
   videoSearchSpinner.style.display = 'inline-block';
   try {
-    const response = await fetch(basePath + '/search-video?q=' + encodeURIComponent(trimmedQuery));
+    const response = await fetch(window.appBasePath + '/search-video?q=' + encodeURIComponent(trimmedQuery));
     const result = await response.json();
     if (requestId !== videoSearchRequestId) return;
     if (!response.ok) throw new Error(result.error || 'Search failed');
@@ -432,7 +432,7 @@ kodiRefreshButton.addEventListener('click', async () => {
   status.className = 'status loading show';
   status.textContent = 'Triggering Kodi library scan...';
   try {
-    const response = await fetch(basePath + '/kodi-refresh', { method: 'POST' });
+    const response = await fetch(window.appBasePath + '/kodi-refresh', { method: 'POST' });
     const result = await response.json();
     if (response.ok) {
       status.className = 'status success show';
@@ -485,7 +485,7 @@ async function renameDownloadedFile() {
   const oldName = input.defaultValue.trim();
   if (!newName || newName === oldName) return;
   try {
-    const response = await fetch(basePath + '/rename-file', {
+    const response = await fetch(window.appBasePath + '/rename-file', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ oldName, newName }),
@@ -532,7 +532,7 @@ async function renameSearchFile(index) {
     return;
   }
   try {
-    const response = await fetch(basePath + '/rename-file', {
+    const response = await fetch(window.appBasePath + '/rename-file', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ oldName, newName }),
@@ -567,11 +567,11 @@ function extractYouTubeIdFromInput(rawValue) {
 }
 
 (function () {
-  const sse = new EventSource(basePath + '/hot-reload');
+  const sse = new EventSource(window.appBasePath + '/hot-reload');
   sse.onerror = function () {
     sse.close();
     const poll = setInterval(function () {
-      fetch(basePath + '/')
+      fetch(window.appBasePath + '/')
         .then(function (response) {
           if (response.ok) {
             clearInterval(poll);
