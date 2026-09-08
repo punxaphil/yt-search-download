@@ -14,9 +14,10 @@ import {
 } from './utils/files';
 import { buildNfoContent } from './utils/nfo';
 import { triggerKodiLibraryScan } from './services/kodi';
-import { fetchYoutubeTitle } from './services/youtube-title';
-import { getJob, setJob, runDownloadJob, searchYouTubeVideo } from './services/download-job';
+import { fetchYoutubeTitle } from './services/title';
+import { getJob, setJob, runDownloadJob } from './services/download';
 import { renderIndexPage } from './views/index-page';
+import { searchYouTubeVideo } from './services/search';
 
 export const router = Router();
 

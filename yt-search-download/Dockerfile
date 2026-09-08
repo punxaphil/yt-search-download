@@ -17,6 +17,6 @@ WORKDIR /app
 COPY . .
 RUN npm install
 
-ENV YTDLP_COOKIES_FILE=/app/cookie.txt
+ENV YTDLP_COOKIES_FILE=/share/cookie.txt
 
 CMD npm run start
