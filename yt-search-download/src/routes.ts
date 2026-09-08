@@ -128,16 +128,6 @@ router.get('/video-info', async (req, res) => {
   }
 });
 
-router.get('/hot-reload', (req, res) => {
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
-  res.flushHeaders();
-  res.write('data: connected\n\n');
-  const ping = setInterval(() => res.write(':\n\n'), 15000);
-  req.on('close', () => clearInterval(ping));
-});
-
 router.get('/debug/runtime', (_req, res) => {
   try {
     const options = getRuntimeOptions();

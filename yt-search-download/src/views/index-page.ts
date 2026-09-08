@@ -64,16 +64,10 @@ resolvedSaveDir: ${escapeHtml(String(debugSummary.resolvedSaveDir))}
 stateDirExists: ${String(debugSummary.stateDirExists)}
 saveDirExists: ${String(debugSummary.saveDirExists)}
 initialRecentVideosCount: ${String(debugSummary.initialRecentVideosCount)}
-Inspect full JSON: <a id="debug-runtime-link" href="#" target="_blank" rel="noreferrer">/debug/runtime</a></div>
+Inspect full JSON: <a href="./debug/runtime" target="_blank" rel="noreferrer">/debug/runtime</a></div>
           <div id="debug-box" class="debug-box" aria-live="polite"></div>
         </main>
-        <script>
-          window.appBasePath = window.location.pathname === '/' ? '' : window.location.pathname;
-          document.getElementById('debug-runtime-link').href = window.appBasePath + '/debug/runtime';
-          const script = document.createElement('script');
-          script.src = window.appBasePath + '/index-page.js';
-          document.head.appendChild(script);
-        </script>
+        <script src="./index-page.js"></script>
       </body>
     </html>
   `;
