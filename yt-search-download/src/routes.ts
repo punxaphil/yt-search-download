@@ -199,8 +199,10 @@ router.post('/download-video', async (req, res) => {
 
     const matchingFiles = findFilesContainingYoutubeId(options.saveDir, youtubeId);
     if (matchingFiles.length > 0 && !allowRedownload) {
+      let error = `Video appears already downloaded for YouTube ID ${youtubeId}. Confirm redownload to continue.`;
+      res.statusMessage = error;
       res.status(409).json({
-        error: `Video appears already downloaded for YouTube ID ${youtubeId}. Confirm redownload to continue.`,
+        error,
         alreadyDownloaded: true,
         youtubeId,
         matchingFiles,
