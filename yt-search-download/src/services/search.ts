@@ -7,7 +7,7 @@ export async function searchYouTubeVideo(query: string) {
     '--print',
     '%(title)s\n%(webpage_url)s',
     '--skip-download',
-    `ytsearch10:${query}`,
+    `ytsearch3:${query}`,
   ]);
   console.log(`yt-dlp search result for query "${query}":`, commandResult.stdout);
   const lines = commandResult.stdout
