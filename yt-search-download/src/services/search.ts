@@ -14,7 +14,13 @@ export async function searchYouTubeVideo(query: string) {
     .split('\n')
     .map((line) => line.trim())
     .filter(Boolean);
-  const url = lines.pop();
-  const title = lines.pop() || '';
-  return { url: url || '', title };
+  const results: { title: string; url: string }[] = [];
+  for (let i = 0; i < lines.length; i += 2) {
+    const title = lines[i];
+    const url = lines[i + 1];
+    if (title && url) {
+      results.push({ title, url });
+    }
+  }
+  return results;
 }
