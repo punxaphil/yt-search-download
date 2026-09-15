@@ -404,10 +404,15 @@ async function runYouTubeSearch(query) {
     const result = await response.json();
     if (requestId !== videoSearchRequestId) return;
     if (!response.ok) throw new Error(result.error || 'Search failed');
-    if (result && result.url) {
-      urlInput.value = result.url;
-      urlInput.dispatchEvent(new Event('input', { bubbles: true }));
-      videoSearchResults.innerHTML = '<div class="search-item">' + escapeHtml(result.title || '') + '</div>';
+    if (result) {
+      const video = Array.isArray(result) ? result[0] : result;
+      if (video.url) {
+        urlInput.value = video.url;
+        urlInput.dispatchEvent(new Event('input', { bubbles: true }));
+        videoSearchResults.innerHTML = '<div class="search-item">' + escapeHtml(video.title || '') + '</div>';
+      } else {
+        videoSearchResults.innerHTML = '<div class="search-empty">No video found</div>';
+      }
     } else {
       videoSearchResults.innerHTML = '<div class="search-empty">No video found</div>';
     }
