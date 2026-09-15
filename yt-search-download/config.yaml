@@ -1,6 +1,6 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-configuration
 name: YT Search & Download
-version: 1.0.16
+version: 1.0.17
 slug: yt-search-download
 description: A Home Assistant app for searching and downloading Youtube videos
 arch:
@@ -20,9 +20,17 @@ options:
   saveDir: /media/yt-search-download
   stateDir: /data
   cookiesFile: /share/cookie.txt
+  kodiUsername:
+  kodiPassword:
+  kodiHost:
+  kodiPort:
 schema:
   saveDir: "str"
   stateDir: "str"
   cookiesFile: "str"
+  kodiUsername: "str?"
+  kodiPassword: "str?"
+  kodiHost: "str?"
+  kodiPort: "int?"
 image: ghcr.io/punxaphil/yt-search-download
 init: false

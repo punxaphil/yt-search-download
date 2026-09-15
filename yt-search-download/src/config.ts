@@ -11,6 +11,10 @@ export type RuntimeOptions = {
   saveDir: string;
   stateDir: string;
   cookiesFile: string;
+  kodiUsername?: string;
+  kodiPassword?: string;
+  kodiHost?: string;
+  kodiPort?: number;
 };
 
 const runtimeOptions = commandLineArgs(optionDefinitions, { partial: true }) as RuntimeOptions;

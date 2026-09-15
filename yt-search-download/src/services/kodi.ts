@@ -1,8 +1,12 @@
+import { getRuntimeOptions } from '../config';
+
 export async function triggerKodiLibraryScan() {
-  const kodiUser = process.env.KODI_USER || '';
-  const kodiPassword = process.env.KODI_PASSWORD || '';
-  const kodiHost = process.env.KODI_HOST || '';
-  const kodiPort = process.env.KODI_PORT || '';
+  const options = getRuntimeOptions();
+
+  const kodiUser = options.kodiUsername || '';
+  const kodiPassword = options.kodiPassword || '';
+  const kodiHost = options.kodiHost || '';
+  const kodiPort = options.kodiPort || '';
 
   if (!kodiHost || !kodiPort || !kodiUser || !kodiPassword) {
     throw new Error('Missing Kodi env vars. Required: KODI_USER, KODI_PASSWORD, KODI_HOST, KODI_PORT.');
