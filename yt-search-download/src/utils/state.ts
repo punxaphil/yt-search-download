@@ -3,7 +3,10 @@ import { resolveExistingDir } from '../config';
 
 export function ensureStateFiles(stateDirOption?: string) {
   const stateDir =
-    resolveExistingDir([stateDirOption, process.env.STATE_DIR, '/state', 'state']) ||
+    resolveExistingDir(stateDirOption) ||
+    resolveExistingDir(process.env.STATE_DIR) ||
+    resolveExistingDir('/state') ||
+    resolveExistingDir('state') ||
     stateDirOption ||
     process.env.STATE_DIR ||
     '/state';
